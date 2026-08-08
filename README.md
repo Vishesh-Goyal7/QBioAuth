@@ -228,7 +228,7 @@ Stay curious.
 
 ## 🙋‍♂️ Author & Co-Authors
 
-> *Co-author details below are placeholders pending final attribution — to be updated with each contributor's own information.*
+> *PLACEHOLDER TEXT*
 
 **Vishesh Goyal**
 [Mail](mailto:visheshvishu1@outlook.com) | [Portfolio](https://visheshverse.com) | [GitHub](https://github.com/Vishesh-Goyal7) | [LinkedIn](https://www.linkedin.com/in/vishesh-goyal-2k5)
