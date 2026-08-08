@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #0b0f17;
+  color: #e5e7eb;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+@keyframes qbio-edge-shake {
+  0%,
+  100% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.35;
+  }
+}
+
+.qbio-edge-failure {
+  animation: qbio-edge-shake 0.6s ease-in-out 2;
+}
+
+@keyframes qbio-edge-attack {
+  0%,
+  100% {
+    stroke-opacity: 1;
+    filter: drop-shadow(0 0 0 rgba(225, 29, 72, 0));
+  }
+  50% {
+    stroke-opacity: 0.5;
+    filter: drop-shadow(0 0 6px rgba(225, 29, 72, 0.9));
+  }
+}
+
+.qbio-edge-attack {
+  animation: qbio-edge-attack 0.35s ease-in-out infinite;
+}
+
