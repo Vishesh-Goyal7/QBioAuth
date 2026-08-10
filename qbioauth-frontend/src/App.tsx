@@ -4,6 +4,7 @@ import MetricCards from "./components/panels/MetricCards";
 import EventLog from "./components/panels/EventLog";
 import SystemInfoPanel from "./components/panels/SystemInfoPanel";
 import IrisCredentialModal from "./components/panels/IrisCredentialModal";
+import RevealedSecretsPanel from "./components/panels/RevealedSecretsPanel";
 import ControlBar from "./components/controls/ControlBar";
 import MessageComposer from "./components/controls/MessageComposer";
 import ReplayControls from "./components/controls/ReplayControls";
@@ -153,6 +154,7 @@ function MainApp() {
 
       <BackendUrlFooter />
       <IrisCredentialModal />
+      <RevealedSecretsPanel />
     </div>
   );
 }

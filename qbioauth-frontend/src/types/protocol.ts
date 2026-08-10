@@ -234,6 +234,24 @@ export interface ConfirmationVerifiedPayload {
   verified: boolean;
 }
 
+// v4: only present when the authenticate command was sent with
+// reveal_secrets: true — an opt-in, instructional-only demo mode. This is
+// the ONE place raw derived key material is ever transmitted to the
+// frontend; it must never be inferred or surfaced through any other path.
+export interface RevealedSecretKeys {
+  terminal_to_server_key_hex: string;
+  server_to_terminal_key_hex: string;
+  terminal_to_server_nonce_base_hex: string;
+  server_to_terminal_nonce_base_hex: string;
+  confirmation_key_hex: string;
+}
+export interface RawSecretsRevealedPayload {
+  warning: string;
+  qkd_raw_secret_hex: string;
+  qkd_raw_secret_bits: number;
+  keys: RevealedSecretKeys;
+}
+
 export interface ChannelEstablishedPayload {
   cipher: string;
 }
@@ -291,6 +309,7 @@ export type ProtocolEvent =
   | (EventBase & { phase: "QKD_PRIVACY_AMPLIFICATION"; step: "AMPLIFICATION_COMPLETE"; status: "SUCCESS"; payload: AmplificationCompletePayload })
   | (EventBase & { phase: "KEY_DERIVATION"; step: "HKDF_COMPLETE"; status: "SUCCESS"; payload: HkdfCompletePayload })
   | (EventBase & { phase: "KEY_DERIVATION"; step: "CONFIRMATION_VERIFIED"; status: "SUCCESS" | "FAILURE"; payload: ConfirmationVerifiedPayload })
+  | (EventBase & { phase: "KEY_DERIVATION"; step: "RAW_SECRETS_REVEALED"; status: "SUCCESS"; payload: RawSecretsRevealedPayload })
   | (EventBase & { phase: "AES_CHANNEL"; step: "CHANNEL_ESTABLISHED"; status: "SUCCESS"; payload: ChannelEstablishedPayload })
   | (EventBase & { phase: "AES_CHANNEL"; step: "MESSAGE_SENT"; status: "SUCCESS"; payload: MessageSentPayload })
   | (EventBase & { phase: "AES_CHANNEL"; step: "MESSAGE_SENT"; status: "FAILURE"; payload: MessageSentFailurePayload })
@@ -367,6 +386,10 @@ export interface AuthenticateCommand {
   // v3: now a real, backend-wired intercept-resend attack simulation —
   // detected via a genuine QBER spike, not a scripted failure.
   eavesdropper_present?: boolean;
+  // v4: opt-in, instructional-demo-only. Must only ever be included as
+  // `true` when the user has explicitly enabled it for this run — never a
+  // standing preference, and omitted entirely (not sent as false) otherwise.
+  reveal_secrets?: boolean;
 }
 export interface SendMessageCommand {
   action: "send_message";

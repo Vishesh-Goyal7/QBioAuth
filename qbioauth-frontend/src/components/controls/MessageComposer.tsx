@@ -19,6 +19,8 @@ export default function MessageComposer({ session }: MessageComposerProps) {
   const chatMessages = useProtocolStore((s) => s.chatMessages);
   const chatError = useProtocolStore((s) => s.chatError);
   const clearChatError = useProtocolStore((s) => s.clearChatError);
+  const hasRevealedSecrets = useProtocolStore((s) => s.revealedSecrets !== null);
+  const openRevealedSecrets = useProtocolStore((s) => s.openRevealedSecrets);
 
   const [direction, setDirection] = useState<"T->S" | "S->T">("T->S");
   const [text, setText] = useState("");
@@ -149,6 +151,16 @@ export default function MessageComposer({ session }: MessageComposerProps) {
           >
             Send
           </button>
+          {hasRevealedSecrets && (
+            <button
+              type="button"
+              onClick={openRevealedSecrets}
+              title="Show revealed session keys"
+              className="rounded-md border border-amber-700 bg-amber-950/40 px-2.5 py-2 text-sm text-amber-400 transition hover:bg-amber-900/50"
+            >
+              🔑
+            </button>
+          )}
         </div>
       </form>
     </div>

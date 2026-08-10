@@ -8,6 +8,7 @@ import type {
   ProtocolEvent,
   QkdConfigDefaultsResponse,
   QkdRunConfiguration,
+  RawSecretsRevealedPayload,
 } from "../types/protocol";
 import { normalizeBaseUrl, toWsBaseUrl } from "../lib/apiClient";
 import { saveIrisCredential } from "../lib/irisCredentialStorage";
@@ -95,6 +96,19 @@ interface ProtocolStoreState {
   distanceKm: number;
   distanceTouched: boolean;
 
+  // v4: opt-in, instructional-demo-only "reveal secrets" mode. Unlike the
+  // QKD config values above, this is deliberately reset on every
+  // startNewSession/reset — it must never become a standing preference
+  // that silently carries into the next run.
+  revealSecretsEnabled: boolean;
+  // The one-time payload from KEY_DERIVATION.RAW_SECRETS_REVEALED, if the
+  // current run had reveal_secrets enabled. This is the only place raw
+  // derived key material is ever held client-side. Kept around (not wiped
+  // on dismiss) so the chat view's "show keys" button can reopen the same
+  // data later — visibility is tracked separately.
+  revealedSecrets: RawSecretsRevealedPayload | null;
+  revealedSecretsVisible: boolean;
+
   // Node "is active right now" flags for ProtocolDiagram, recomputed from
   // each incoming event. Not a plain actor->node mapping: the wire
   // protocol's `actor` for iris-capture events is "TERMINAL" (the device
@@ -128,6 +142,9 @@ interface ProtocolStoreState {
   setQkdConfigValue: (key: string, value: number) => void;
   setDistanceKm: (value: number) => void;
   resetQkdConfigToDefaults: () => void;
+  setRevealSecretsEnabled: (value: boolean) => void;
+  openRevealedSecrets: () => void;
+  dismissRevealedSecrets: () => void;
   startReplay: () => void;
   setReplaying: (value: boolean) => void;
   reset: () => void;
@@ -157,6 +174,10 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
   qkdConfigTouchedKeys: [],
   distanceKm: 5.0,
   distanceTouched: false,
+
+  revealSecretsEnabled: false,
+  revealedSecrets: null,
+  revealedSecretsVisible: false,
 
   terminalNodeActive: false,
   serverNodeActive: false,
@@ -192,6 +213,12 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
       lastFailure: null,
       issuedIrisCredential: null,
       runParameters: null,
+      // Reset every run — never a standing preference. The command object
+      // for THIS run was already built by the caller before this fires,
+      // so this only affects what the panel shows for the *next* run.
+      revealSecretsEnabled: false,
+      revealedSecrets: null,
+      revealedSecretsVisible: false,
       terminalNodeActive: false,
       serverNodeActive: false,
       userNodeActive: false,
@@ -372,6 +399,16 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
         }
       }
 
+      // v4: the only moment raw derived key material ever appears —
+      // opt-in, instructional-demo-only (see reveal_secrets on the
+      // authenticate command).
+      let revealedSecrets = state.revealedSecrets;
+      let revealedSecretsVisible = state.revealedSecretsVisible;
+      if (event.phase === "KEY_DERIVATION" && event.step === "RAW_SECRETS_REVEALED" && event.status === "SUCCESS") {
+        revealedSecrets = event.payload as RawSecretsRevealedPayload;
+        revealedSecretsVisible = true;
+      }
+
       const isIrisCaptureStep = event.step === "IRIS_CAPTURE_STARTED" || event.step === "IRIS_CAPTURE_COMPLETE";
       const isActiveStatus = event.status === "STARTED" || event.status === "PROGRESS";
       const userNodeActive = isActiveStatus && isIrisCaptureStep;
@@ -385,6 +422,8 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
         lastFailure,
         issuedIrisCredential,
         runParameters,
+        revealedSecrets,
+        revealedSecretsVisible,
         terminalNodeActive,
         serverNodeActive,
         userNodeActive,
@@ -416,6 +455,8 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
       lastFailure: null,
       issuedIrisCredential: null,
       runParameters: null,
+      revealedSecrets: null,
+      revealedSecretsVisible: false,
       terminalNodeActive: false,
       serverNodeActive: false,
       userNodeActive: false,
@@ -428,6 +469,15 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
   setReplaying: (value) => set({ isReplaying: value }),
 
   dismissIssuedIrisCredential: () => set({ issuedIrisCredential: null }),
+
+  setRevealSecretsEnabled: (value) => set({ revealSecretsEnabled: value }),
+
+  // Hides the modal without discarding the data, so the "show keys" button
+  // in the chat view can reopen the same reveal later in the same run.
+  dismissRevealedSecrets: () => set({ revealedSecretsVisible: false }),
+
+  openRevealedSecrets: () =>
+    set((state) => (state.revealedSecrets ? { revealedSecretsVisible: true } : {})),
 
   setQkdConfigDefaults: (defaults) => {
     const values: Record<string, number> = {};
@@ -479,6 +529,9 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
       lastFailure: null,
       issuedIrisCredential: null,
       runParameters: null,
+      revealSecretsEnabled: false,
+      revealedSecrets: null,
+      revealedSecretsVisible: false,
       terminalNodeActive: false,
       serverNodeActive: false,
       userNodeActive: false,

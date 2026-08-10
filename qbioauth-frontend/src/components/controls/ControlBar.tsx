@@ -38,6 +38,7 @@ export default function ControlBar({ session }: ControlBarProps) {
   const qkdConfigTouchedKeys = useProtocolStore((s) => s.qkdConfigTouchedKeys);
   const distanceKm = useProtocolStore((s) => s.distanceKm);
   const distanceTouched = useProtocolStore((s) => s.distanceTouched);
+  const revealSecretsEnabled = useProtocolStore((s) => s.revealSecretsEnabled);
 
   const savedIrisCode = getSavedIrisCode(authEmail);
 
@@ -74,6 +75,10 @@ export default function ControlBar({ session }: ControlBarProps) {
       eavesdropper_present: eavesdropperPresent,
       ...(configuration ? { configuration } : {}),
       ...(distanceTouched ? { distance_km: distanceKm } : {}),
+      // Only ever included when explicitly toggled on for this run — never
+      // sent as false, and startNewSession resets the toggle immediately
+      // after this fires so it can't silently carry into the next run.
+      ...(revealSecretsEnabled ? { reveal_secrets: true } : {}),
     });
   }
 

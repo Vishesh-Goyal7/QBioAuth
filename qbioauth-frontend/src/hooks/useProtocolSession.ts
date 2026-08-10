@@ -9,6 +9,10 @@ export interface StartAuthenticateParams {
   // what it wants verified.
   iris_code: string;
   eavesdropper_present?: boolean;
+  // v4: opt-in instructional demo mode — see StartAuthenticateParams caller
+  // (ControlBar), which reads this fresh from the store at submit time and
+  // resets it immediately after so it never carries over to the next run.
+  reveal_secrets?: boolean;
 }
 
 // Owns the single active WebSocket for the app. protocolSocket.close()

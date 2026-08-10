@@ -37,6 +37,8 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
   const setQkdConfigValue = useProtocolStore((s) => s.setQkdConfigValue);
   const setDistanceKm = useProtocolStore((s) => s.setDistanceKm);
   const resetQkdConfigToDefaults = useProtocolStore((s) => s.resetQkdConfigToDefaults);
+  const revealSecretsEnabled = useProtocolStore((s) => s.revealSecretsEnabled);
+  const setRevealSecretsEnabled = useProtocolStore((s) => s.setRevealSecretsEnabled);
 
   useEffect(() => {
     if (!apiBaseUrl || fetchedRef.current) return;
@@ -152,6 +154,26 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
               </button>
             </>
           )}
+
+          {/* Deliberately separated from the QKD parameters above — this
+              isn't a tuning knob, it's an occasional instructional action
+              and is styled to read that way (amber, boxed, off by default,
+              never persisted). */}
+          <div className="rounded-md border border-amber-800 bg-amber-950/20 p-2.5">
+            <label className="flex items-center gap-2 text-xs font-semibold text-amber-300">
+              <input
+                type="checkbox"
+                checked={revealSecretsEnabled}
+                onChange={(e) => setRevealSecretsEnabled(e.target.checked)}
+                disabled={disabled}
+                className="h-3.5 w-3.5 accent-amber-500"
+              />
+              Reveal secret material (instructional demo)
+            </label>
+            <p className="mt-1 text-[10px] leading-snug text-gray-500">
+              Shows the actual derived keys on screen. For teaching/demo purposes only.
+            </p>
+          </div>
         </div>
       )}
     </div>
