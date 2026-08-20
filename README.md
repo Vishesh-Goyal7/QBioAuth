@@ -25,10 +25,10 @@ The whole pipeline lives in a single Google Colab notebook, wrapped in a FastAPI
 
 The QKD layer was stress-tested with a full physical channel model (fibre attenuation, detector efficiency jitter, dark counts, intrinsic optical error) across a one-factor-at-a-time (OFAT) sweep of distance, eavesdropper interception fraction, and basis bias — **200 trials per configuration**. Full results live in [`OFAT_Outputs/`](./OFAT_Outputs).
 
-<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/04_qber_vs_distance_eve_comparison.png'></p>
-<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/08_success_and_eve_rejection_vs_distance.png'></p>
-<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/11_eve_fraction_vs_qber.png'></p>
-<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/10_final_secret_vs_distance.png'></p>
+<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/PNG_Images/04_qber_vs_distance_eve_comparison.png'></p>
+<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/PNG_Images/08_success_and_eve_rejection_vs_distance.png'></p>
+<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/PNG_Images/11_eve_fraction_vs_qber.png'></p>
+<p align='center'><img height=430px width=auto src='./OFAT_Outputs/Graphs/PNG_Images/10_final_secret_vs_distance.png'></p>
 
 **Key findings:**
 - A full intercept-resend attack sits at a flat ~12–13% estimated QBER regardless of distance (0–200 km) always well clear of the 8% abort threshold, while natural channel noise alone stays under ~3% out to 150 km.
