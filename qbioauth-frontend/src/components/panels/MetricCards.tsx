@@ -1,5 +1,6 @@
 import { useProtocolStore } from "../../store/protocolStore";
 import { useAnimatedNumber } from "../../hooks/useAnimatedNumber";
+import { parseQberFromFailureMessage } from "../../lib/qberMessage";
 
 export default function MetricCards() {
   const qberEntry = useProtocolStore((s) => s.phaseState.QKD_PARAMETER_ESTIMATION);
@@ -7,11 +8,20 @@ export default function MetricCards() {
   const lastFailure = useProtocolStore((s) => s.lastFailure);
 
   const qberPayload = qberEntry?.latestEvent.payload as
-    | { estimated_qber?: number; threshold?: number }
+    | { estimated_qber?: number; threshold?: number; failure_message?: string }
     | undefined;
   const isQberFailure = qberEntry?.status === "FAILURE";
   const isAttack = isQberFailure && lastFailure?.code === "EAVESDROPPER_DETECTED";
-  const qberValue = qberPayload?.estimated_qber;
+  // An eavesdropper-triggered abort never carries structured estimated_qber/
+  // threshold fields (see lib/qberMessage.ts) — fall back to parsing them
+  // out of failure_message so the real numbers still show instead of "—".
+  const parsedFromMessage = parseQberFromFailureMessage(qberPayload?.failure_message);
+  const qberValue =
+    qberPayload?.estimated_qber ??
+    (parsedFromMessage.estimatedQberPercent != null ? parsedFromMessage.estimatedQberPercent / 100 : undefined);
+  const thresholdValue =
+    qberPayload?.threshold ??
+    (parsedFromMessage.thresholdPercent != null ? parsedFromMessage.thresholdPercent / 100 : undefined);
 
   const paPayload = amplificationEntry?.latestEvent.payload as
     | { input_length_bits?: number; output_length_bits?: number }
@@ -43,15 +53,15 @@ export default function MetricCards() {
             <div className={`mt-1 text-xs font-semibold ${isAttack ? "text-rose-300" : "text-red-400"}`}>
               {isAttack ? "🚨 EAVESDROPPER DETECTED" : "Possible eavesdropper detected"}
             </div>
-            {qberValue != null && qberPayload?.threshold != null && (
+            {qberValue != null && thresholdValue != null && (
               <div className="mt-1 text-xs text-gray-500">
-                {(qberValue * 100).toFixed(2)}% vs threshold {(qberPayload.threshold * 100).toFixed(1)}%
+                {(qberValue * 100).toFixed(2)}% vs threshold {(thresholdValue * 100).toFixed(1)}%
               </div>
             )}
           </>
         ) : (
-          qberPayload?.threshold != null && (
-            <div className="mt-1 text-xs text-gray-500">threshold {(qberPayload.threshold * 100).toFixed(1)}%</div>
+          thresholdValue != null && (
+            <div className="mt-1 text-xs text-gray-500">threshold {(thresholdValue * 100).toFixed(1)}%</div>
           )
         )}
       </div>

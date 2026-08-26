@@ -1,17 +1,25 @@
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import type {
+  AuthenticateCompletedPayload,
+  BasisComparisonPayload,
   FailureCode,
   Phase,
   PhaseState,
   PhaseStatus,
   ProtocolEvent,
+  QberEstimatedPayload,
+  QberEstimationFailedPayload,
   QkdConfigDefaultsResponse,
   QkdRunConfiguration,
   RawSecretsRevealedPayload,
+  SessionHistoryEntry,
+  TransmissionCompletePayload,
+  TransmissionStartedPayload,
 } from "../types/protocol";
 import { normalizeBaseUrl, toWsBaseUrl } from "../lib/apiClient";
 import { saveIrisCredential } from "../lib/irisCredentialStorage";
+import { parseQberFromFailureMessage } from "../lib/qberMessage";
 
 export type ConnectionStatus = "DISCONNECTED" | "CONNECTING" | "CONNECTED" | "ERROR";
 export type SessionOutcome = "IN_PROGRESS" | "COMPLETED" | "FAILED" | null;
@@ -128,6 +136,13 @@ interface ProtocolStoreState {
   // snapshot, never touches the socket or backend.
   isReplaying: boolean;
 
+  // Per-browser-session analytics history: one entry per completed/failed
+  // AUTHENTICATE run, for the Session Analytics charts. Deliberately NOT
+  // reset by startNewSession/startReplay/reset — same treatment as
+  // qkdConfigValues/distanceKm above — so it accumulates across every run
+  // in this tab and only clears via clearSessionHistory or a page reload.
+  sessionHistory: SessionHistoryEntry[];
+
   // actions
   setApiBaseUrl: (url: string) => void;
   clearApiBaseUrl: () => void;
@@ -147,6 +162,7 @@ interface ProtocolStoreState {
   dismissRevealedSecrets: () => void;
   startReplay: () => void;
   setReplaying: (value: boolean) => void;
+  clearSessionHistory: () => void;
   reset: () => void;
 }
 
@@ -187,6 +203,7 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
   chatMessages: [],
   chatError: null,
   isReplaying: false,
+  sessionHistory: [],
 
   setApiBaseUrl: (url) => {
     const normalized = normalizeBaseUrl(url);
@@ -287,10 +304,74 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
         };
       }
 
+      let sessionHistory = state.sessionHistory;
       if (event.phase === "SESSION" && event.step === "SESSION_COMPLETED") {
         sessionOutcome = "COMPLETED";
       } else if (event.phase === "SESSION" && event.step === "SESSION_FAILED") {
         sessionOutcome = "FAILED";
+      }
+
+      // Session Analytics: snapshot one history entry per AUTHENTICATE run
+      // the moment it reaches a terminal state, pulling whatever phase
+      // payloads that run actually reached out of nextPhaseState (already
+      // merged with this event above). Skipped during replay so re-playing
+      // an already-captured run never double-counts it.
+      if (
+        state.mode === "AUTHENTICATE" &&
+        !state.isReplaying &&
+        event.phase === "SESSION" &&
+        (event.step === "SESSION_COMPLETED" || event.step === "SESSION_FAILED")
+      ) {
+        const transmissionPayload = nextPhaseState.QKD_TRANSMISSION?.latestEvent.payload as
+          | TransmissionStartedPayload
+          | TransmissionCompletePayload
+          | undefined;
+        const qubitsDispatched =
+          (transmissionPayload as TransmissionCompletePayload)?.cumulative_transmitted_pulses ??
+          transmissionPayload?.signal_count ??
+          null;
+        const siftingPayload = nextPhaseState.QKD_SIFTING?.latestEvent.payload as
+          | BasisComparisonPayload
+          | undefined;
+        const qubitsReceived = siftingPayload?.sifted_length ?? null;
+        const qberPayload = nextPhaseState.QKD_PARAMETER_ESTIMATION?.latestEvent.payload as
+          | QberEstimatedPayload
+          | QberEstimationFailedPayload
+          | undefined;
+        // An eavesdropper-triggered abort never carries a structured
+        // estimated_qber field (see lib/qberMessage.ts) — fall back to
+        // parsing the real value out of failure_message instead of losing
+        // it from the history/charts entirely.
+        const qberEstimatedValue = (qberPayload as QberEstimatedPayload)?.estimated_qber;
+        const qberPercent =
+          qberEstimatedValue != null
+            ? qberEstimatedValue * 100
+            : parseQberFromFailureMessage((qberPayload as QberEstimationFailedPayload)?.failure_message)
+                .estimatedQberPercent;
+        const eavesdropperPresent = runParameters?.eavesdropperPresent ?? false;
+        const keyLengthBits =
+          event.step === "SESSION_COMPLETED"
+            ? ((event.payload as AuthenticateCompletedPayload).final_key_bits ?? null)
+            : null;
+
+        const entry: SessionHistoryEntry = {
+          id: uuidv4(),
+          runNumber: state.sessionHistory.length + 1,
+          sessionId: event.session_id,
+          outcome: event.step === "SESSION_COMPLETED" ? "COMPLETED" : "FAILED",
+          timestamp: Date.now(),
+          distanceKm: runParameters?.distanceKm ?? null,
+          eavesdropperPresent,
+          qubitsDispatched,
+          qubitsReceived,
+          qberPercent,
+          keyLengthBits,
+          channelEfficiency:
+            qubitsDispatched && qubitsReceived != null && qubitsDispatched > 0
+              ? qubitsReceived / qubitsDispatched
+              : null,
+        };
+        sessionHistory = [...state.sessionHistory, entry];
       }
 
       if (event.phase === "AES_CHANNEL" && event.step === "CHANNEL_ESTABLISHED" && event.status === "SUCCESS") {
@@ -430,6 +511,7 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
         channelEstablished,
         chatMessages,
         chatError,
+        sessionHistory,
       };
     });
   },
@@ -467,6 +549,8 @@ export const useProtocolStore = create<ProtocolStoreState>((set) => ({
     }),
 
   setReplaying: (value) => set({ isReplaying: value }),
+
+  clearSessionHistory: () => set({ sessionHistory: [] }),
 
   dismissIssuedIrisCredential: () => set({ issuedIrisCredential: null }),
 

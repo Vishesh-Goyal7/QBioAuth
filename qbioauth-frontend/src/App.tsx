@@ -5,6 +5,7 @@ import EventLog from "./components/panels/EventLog";
 import SystemInfoPanel from "./components/panels/SystemInfoPanel";
 import IrisCredentialModal from "./components/panels/IrisCredentialModal";
 import RevealedSecretsPanel from "./components/panels/RevealedSecretsPanel";
+import SessionAnalyticsPanel from "./components/panels/SessionAnalyticsPanel";
 import ControlBar from "./components/controls/ControlBar";
 import MessageComposer from "./components/controls/MessageComposer";
 import ReplayControls from "./components/controls/ReplayControls";
@@ -117,7 +118,7 @@ function MainApp() {
   const session = useProtocolSession();
 
   return (
-    <div className="flex h-screen flex-col bg-[#0b0f17]">
+    <div className="flex min-h-screen flex-col bg-[#0b0f17]">
       <header className="flex items-center justify-between border-b border-panelborder px-6 py-3">
         <div>
           <h1 className="text-lg font-semibold text-gray-100">QBioAuth</h1>
@@ -125,7 +126,7 @@ function MainApp() {
         </div>
       </header>
 
-      <main className="flex flex-1 gap-4 overflow-hidden p-4">
+      <main className="flex h-[calc(100vh-64px)] shrink-0 gap-4 overflow-hidden p-4">
         <aside className="flex w-80 shrink-0 flex-col gap-4 overflow-y-auto">
           <SystemInfoPanel />
           <ControlBar session={session} />
@@ -151,6 +152,10 @@ function MainApp() {
           </div>
         </aside>
       </main>
+
+      <div className="px-4 pb-4">
+        <SessionAnalyticsPanel />
+      </div>
 
       <BackendUrlFooter />
       <IrisCredentialModal />

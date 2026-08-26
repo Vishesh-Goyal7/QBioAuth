@@ -455,3 +455,22 @@ export interface UsersResponse {
   enrolled_count: number;
   user_ids: string[];
 }
+
+// Frontend-only — never sent by the backend. One entry per completed/failed
+// AUTHENTICATE run in this browser session, assembled client-side from
+// whatever phase payloads that run actually reached, for the Session
+// Analytics charts.
+export interface SessionHistoryEntry {
+  id: string;
+  runNumber: number;
+  sessionId: string;
+  outcome: "COMPLETED" | "FAILED";
+  timestamp: number;
+  distanceKm: number | null;
+  eavesdropperPresent: boolean;
+  qubitsDispatched: number | null;
+  qubitsReceived: number | null;
+  qberPercent: number | null;
+  keyLengthBits: number | null;
+  channelEfficiency: number | null;
+}
