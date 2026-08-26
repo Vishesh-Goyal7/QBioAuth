@@ -21,7 +21,7 @@ function CopyableField({ label, value }: { label: string; value: string }) {
         <button
           type="button"
           onClick={handleCopy}
-          className="text-[10px] font-medium text-amber-400 hover:text-amber-300"
+          className="text-[10px] font-medium text-amber-600 hover:text-amber-500 dark:text-amber-400 dark:hover:text-amber-300"
         >
           {copied ? "Copied ✓" : "Copy"}
         </button>
@@ -51,9 +51,9 @@ export default function RevealedSecretsPanel() {
         </div>
 
         <div className="max-h-[80vh] overflow-y-auto p-6">
-          <h2 className="mb-3 text-lg font-semibold text-amber-300">Raw session secrets revealed</h2>
+          <h2 className="mb-3 text-lg font-semibold text-amber-700 dark:text-amber-300">Raw session secrets revealed</h2>
 
-          <p className="mb-4 rounded-md border border-amber-800 bg-amber-950/40 px-3 py-2 text-sm text-amber-200">
+          <p className="mb-4 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
             {revealed.warning}
           </p>
 

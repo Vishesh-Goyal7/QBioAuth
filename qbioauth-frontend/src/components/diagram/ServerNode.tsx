@@ -13,7 +13,7 @@ export default function ServerNode() {
       <span
         className={`mb-1 h-2 w-2 rounded-full ${active ? "animate-pulse bg-sky-400" : "bg-gray-600"}`}
       />
-      <span className="text-sm font-semibold text-gray-100">Server</span>
+      <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Server</span>
       <span className="text-[10px] text-gray-500">QBioAuth backend</span>
       <Handle type="target" position={Position.Left} id="left" className="!bg-gray-500" />
     </div>

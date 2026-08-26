@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-panel: 249 250 251;
+  --color-panelborder: 229 231 235;
+  --color-appbg: 255 255 255;
+  --color-diagrambg: 243 244 246;
+  --color-body-text: 17 24 39;
+}
+
+.dark {
+  --color-panel: 17 24 39;
+  --color-panelborder: 31 41 55;
+  --color-appbg: 11 15 23;
+  --color-diagrambg: 13 19 32;
+  --color-body-text: 229 231 235;
+}
+
 html,
 body,
 #root {
@@ -10,8 +26,8 @@ body,
 
 body {
   margin: 0;
-  background-color: #0b0f17;
-  color: #e5e7eb;
+  background-color: rgb(var(--color-appbg));
+  color: rgb(var(--color-body-text));
   font-family:
     ui-sans-serif,
     system-ui,
@@ -50,4 +66,3 @@ body {
 .qbio-edge-attack {
   animation: qbio-edge-attack 0.35s ease-in-out infinite;
 }
-

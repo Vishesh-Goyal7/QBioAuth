@@ -123,7 +123,7 @@ export default function ControlBar({ session }: ControlBarProps) {
           type="button"
           onClick={() => setTab("ENROLL")}
           className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-            tab === "ENROLL" ? "bg-sky-600 text-white" : "text-gray-400 hover:text-gray-200"
+            tab === "ENROLL" ? "bg-sky-600 text-white" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
           }`}
         >
           Enroll
@@ -132,7 +132,7 @@ export default function ControlBar({ session }: ControlBarProps) {
           type="button"
           onClick={() => setTab("AUTHENTICATE")}
           className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-            tab === "AUTHENTICATE" ? "bg-sky-600 text-white" : "text-gray-400 hover:text-gray-200"
+            tab === "AUTHENTICATE" ? "bg-sky-600 text-white" : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
           }`}
         >
           Authenticate
@@ -149,7 +149,7 @@ export default function ControlBar({ session }: ControlBarProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={disabled}
-              className="w-full rounded-md border border-panelborder bg-[#0b0f17] px-3 py-2 text-sm text-gray-100 outline-none focus:border-sky-500 disabled:opacity-50"
+              className="w-full rounded-md border border-panelborder bg-appbg px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-500 disabled:opacity-50 dark:text-gray-100"
               placeholder="Ada Lovelace"
             />
           </div>
@@ -161,7 +161,7 @@ export default function ControlBar({ session }: ControlBarProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={disabled}
-              className="w-full rounded-md border border-panelborder bg-[#0b0f17] px-3 py-2 text-sm text-gray-100 outline-none focus:border-sky-500 disabled:opacity-50"
+              className="w-full rounded-md border border-panelborder bg-appbg px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-500 disabled:opacity-50 dark:text-gray-100"
               placeholder="ada@example.com"
             />
           </div>
@@ -183,7 +183,7 @@ export default function ControlBar({ session }: ControlBarProps) {
               value={authEmail}
               onChange={(e) => setAuthEmail(e.target.value)}
               disabled={disabled}
-              className="w-full rounded-md border border-panelborder bg-[#0b0f17] px-3 py-2 text-sm text-gray-100 outline-none focus:border-sky-500 disabled:opacity-50"
+              className="w-full rounded-md border border-panelborder bg-appbg px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-500 disabled:opacity-50 dark:text-gray-100"
               placeholder="ada@example.com"
             />
           </div>
@@ -198,7 +198,7 @@ export default function ControlBar({ session }: ControlBarProps) {
                   type="button"
                   onClick={handleAutofill}
                   disabled={disabled}
-                  className="text-[10px] font-medium text-sky-400 hover:text-sky-300 disabled:opacity-50"
+                  className="text-[10px] font-medium text-sky-600 hover:text-sky-500 disabled:opacity-50 dark:text-sky-400 dark:hover:text-sky-300"
                 >
                   Autofill from saved enrollment
                 </button>
@@ -214,7 +214,7 @@ export default function ControlBar({ session }: ControlBarProps) {
                 setNoisePreview(null);
               }}
               disabled={disabled}
-              className={`w-full resize-none rounded-md border bg-[#0b0f17] px-3 py-2 font-mono text-xs text-gray-100 outline-none focus:border-sky-500 disabled:opacity-50 ${
+              className={`w-full resize-none rounded-md border bg-appbg px-3 py-2 font-mono text-xs text-gray-900 outline-none focus:border-sky-500 disabled:opacity-50 dark:text-gray-100 ${
                 irisCodeError ? "border-red-700" : "border-panelborder"
               }`}
               placeholder="The iris code shown when you enrolled…"
@@ -226,8 +226,8 @@ export default function ControlBar({ session }: ControlBarProps) {
             </p>
           </div>
 
-          <div className="rounded-md border border-red-800 bg-red-950/20 p-3">
-            <label className="flex items-center gap-2 text-sm font-semibold text-red-300">
+          <div className="rounded-md border border-red-300 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950/20">
+            <label className="flex items-center gap-2 text-sm font-semibold text-red-700 dark:text-red-300">
               <input
                 type="checkbox"
                 checked={eavesdropperPresent}
@@ -249,13 +249,13 @@ export default function ControlBar({ session }: ControlBarProps) {
           <button
             type="button"
             onClick={() => setAdvancedOpen((v) => !v)}
-            className="text-xs font-medium text-sky-400 hover:text-sky-300"
+            className="text-xs font-medium text-sky-600 hover:text-sky-500 dark:text-sky-400 dark:hover:text-sky-300"
           >
             {advancedOpen ? "Hide advanced ▲" : "Advanced ▼"}
           </button>
 
           {advancedOpen && (
-            <div className="space-y-3 rounded-md border border-panelborder bg-[#0b0f17] p-3">
+            <div className="space-y-3 rounded-md border border-panelborder bg-appbg p-3">
               <div>
                 <div className="mb-1 text-xs font-medium text-gray-400">Simulate imperfect scan</div>
                 <p className="mb-2 text-[10px] text-gray-600">
@@ -305,8 +305,8 @@ export default function ControlBar({ session }: ControlBarProps) {
               {noiseError && <p className="text-[11px] text-red-400">{noiseError}</p>}
 
               {noisePreview && (
-                <div className="space-y-2 rounded-md border border-violet-800 bg-violet-950/30 p-2">
-                  <p className="break-all font-mono text-[10px] text-violet-200">
+                <div className="space-y-2 rounded-md border border-violet-300 bg-violet-50 p-2 dark:border-violet-800 dark:bg-violet-950/30">
+                  <p className="break-all font-mono text-[10px] text-violet-800 dark:text-violet-200">
                     {noisePreview.noisy_iris_code}
                   </p>
                   <p className="text-[10px] text-gray-500">

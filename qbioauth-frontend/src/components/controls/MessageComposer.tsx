@@ -10,8 +10,8 @@ interface MessageComposerProps {
 // mental model from the network diagram into the chat thread: Terminal is
 // amber (TerminalNode), Server is sky (ServerNode).
 const BUBBLE_CLASS: Record<"T->S" | "S->T", string> = {
-  "T->S": "bg-amber-950 text-amber-100",
-  "S->T": "bg-sky-950 text-sky-100",
+  "T->S": "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-100",
+  "S->T": "bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-100",
 };
 
 export default function MessageComposer({ session }: MessageComposerProps) {
@@ -111,7 +111,7 @@ export default function MessageComposer({ session }: MessageComposerProps) {
       </div>
 
       {chatError && (
-        <p className="border-t border-red-900 bg-red-950/50 px-3 py-2 text-xs text-red-300">
+        <p className="border-t border-red-300 bg-red-50 px-3 py-2 text-xs text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-300">
           {chatError}
         </p>
       )}
@@ -133,7 +133,7 @@ export default function MessageComposer({ session }: MessageComposerProps) {
               setDirection(e.target.value as "T->S" | "S->T");
               clearChatError();
             }}
-            className="rounded-md border border-panelborder bg-[#0b0f17] px-2 py-2 text-xs text-gray-200 outline-none"
+            className="rounded-md border border-panelborder bg-appbg px-2 py-2 text-xs text-gray-800 outline-none dark:text-gray-200"
           >
             <option value="T->S">T → S</option>
             <option value="S->T">S → T</option>
@@ -143,7 +143,7 @@ export default function MessageComposer({ session }: MessageComposerProps) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Message…"
-            className="flex-1 rounded-md border border-panelborder bg-[#0b0f17] px-3 py-2 text-sm text-gray-100 outline-none focus:border-sky-500"
+            className="flex-1 rounded-md border border-panelborder bg-appbg px-3 py-2 text-sm text-gray-900 outline-none focus:border-sky-500 dark:text-gray-100"
           />
           <button
             type="submit"
@@ -156,7 +156,7 @@ export default function MessageComposer({ session }: MessageComposerProps) {
               type="button"
               onClick={openRevealedSecrets}
               title="Show revealed session keys"
-              className="rounded-md border border-amber-700 bg-amber-950/40 px-2.5 py-2 text-sm text-amber-400 transition hover:bg-amber-900/50"
+              className="rounded-md border border-amber-400 bg-amber-50 px-2.5 py-2 text-sm text-amber-700 transition hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-400 dark:hover:bg-amber-900/50"
             >
               🔑
             </button>

@@ -67,7 +67,7 @@ export default function ReplayControls() {
       </div>
 
       {isReplaying && (
-        <span className="animate-pulse rounded-full bg-violet-950 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-300">
+        <span className="animate-pulse rounded-full bg-violet-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700 dark:bg-violet-950 dark:text-violet-300">
           Replaying
         </span>
       )}

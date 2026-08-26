@@ -34,23 +34,31 @@ export default function MetricCards() {
       <div
         className={`rounded-lg border p-4 transition-colors ${
           isAttack
-            ? "border-2 border-rose-400 bg-rose-950 shadow-[0_0_16px_rgba(225,29,72,0.5)]"
+            ? "border-2 border-rose-400 bg-rose-100 shadow-[0_0_16px_rgba(225,29,72,0.3)] dark:bg-rose-950 dark:shadow-[0_0_16px_rgba(225,29,72,0.5)]"
             : isQberFailure
-              ? "border-red-700 bg-red-950/40"
+              ? "border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-950/40"
               : "border-panelborder bg-panel"
         }`}
       >
         <div className="text-xs uppercase tracking-wide text-gray-500">QBER</div>
         <div
           className={`mt-1 text-2xl font-semibold ${
-            isAttack ? "text-rose-200" : isQberFailure ? "text-red-300" : "text-gray-100"
+            isAttack
+              ? "text-rose-800 dark:text-rose-200"
+              : isQberFailure
+                ? "text-red-700 dark:text-red-300"
+                : "text-gray-900 dark:text-gray-100"
           }`}
         >
           {qberValue != null ? `${(qberValue * 100).toFixed(2)}%` : "—"}
         </div>
         {isQberFailure ? (
           <>
-            <div className={`mt-1 text-xs font-semibold ${isAttack ? "text-rose-300" : "text-red-400"}`}>
+            <div
+              className={`mt-1 text-xs font-semibold ${
+                isAttack ? "text-rose-700 dark:text-rose-300" : "text-red-600 dark:text-red-400"
+              }`}
+            >
               {isAttack ? "🚨 EAVESDROPPER DETECTED" : "Possible eavesdropper detected"}
             </div>
             {qberValue != null && thresholdValue != null && (
@@ -68,7 +76,7 @@ export default function MetricCards() {
 
       <div className="rounded-lg border border-panelborder bg-panel p-4">
         <div className="text-xs uppercase tracking-wide text-gray-500">Key size</div>
-        <div className="mt-1 text-2xl font-semibold text-gray-100">
+        <div className="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">
           {outputBits ? `${Math.round(animatedBits)} bits` : "—"}
         </div>
         {paPayload?.input_length_bits != null && (

@@ -53,16 +53,16 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
   const touchedCount = qkdConfigTouchedKeys.length + (distanceTouched ? 1 : 0);
 
   return (
-    <div className="rounded-md border border-panelborder bg-[#0b0f17]">
+    <div className="rounded-md border border-panelborder bg-appbg">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-3 py-2 text-xs font-medium text-gray-400 hover:text-gray-200"
+        className="flex w-full items-center justify-between px-3 py-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
       >
         <span>
           Protocol configuration
           {touchedCount > 0 && (
-            <span className="ml-2 rounded-full bg-sky-900 px-1.5 py-0.5 text-[10px] text-sky-300">
+            <span className="ml-2 rounded-full bg-sky-100 px-1.5 py-0.5 text-[10px] text-sky-700 dark:bg-sky-900 dark:text-sky-300">
               {touchedCount} modified
             </span>
           )}
@@ -114,7 +114,7 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
                         value={value}
                         disabled={disabled}
                         onChange={(e) => setQkdConfigValue(param.key, Number(e.target.value))}
-                        className="w-full rounded-md border border-panelborder bg-panel px-2 py-1 text-xs text-gray-100 outline-none focus:border-sky-500 disabled:opacity-50"
+                        className="w-full rounded-md border border-panelborder bg-panel px-2 py-1 text-xs text-gray-900 outline-none focus:border-sky-500 disabled:opacity-50 dark:text-gray-100"
                       />
                     )}
                     <p className="mt-0.5 text-[10px] text-gray-600">{param.description}</p>
@@ -137,7 +137,7 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
                   value={distanceKm}
                   disabled={disabled}
                   onChange={(e) => setDistanceKm(Number(e.target.value))}
-                  className="w-full rounded-md border border-panelborder bg-panel px-2 py-1 text-xs text-gray-100 outline-none focus:border-sky-500 disabled:opacity-50"
+                  className="w-full rounded-md border border-panelborder bg-panel px-2 py-1 text-xs text-gray-900 outline-none focus:border-sky-500 disabled:opacity-50 dark:text-gray-100"
                 />
                 <p className="mt-0.5 text-[10px] text-gray-600">
                   Larger distances increase physical channel noise.
@@ -148,7 +148,7 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
                 type="button"
                 onClick={resetQkdConfigToDefaults}
                 disabled={disabled || touchedCount === 0}
-                className="w-full rounded-md border border-panelborder px-3 py-1.5 text-xs font-medium text-gray-400 transition hover:text-gray-200 disabled:cursor-not-allowed disabled:opacity-40"
+                className="w-full rounded-md border border-panelborder px-3 py-1.5 text-xs font-medium text-gray-500 transition hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-40 dark:text-gray-400 dark:hover:text-gray-200"
               >
                 Reset to defaults
               </button>
@@ -159,8 +159,8 @@ export default function QkdConfigPanel({ disabled }: QkdConfigPanelProps) {
               isn't a tuning knob, it's an occasional instructional action
               and is styled to read that way (amber, boxed, off by default,
               never persisted). */}
-          <div className="rounded-md border border-amber-800 bg-amber-950/20 p-2.5">
-            <label className="flex items-center gap-2 text-xs font-semibold text-amber-300">
+          <div className="rounded-md border border-amber-300 bg-amber-50 p-2.5 dark:border-amber-800 dark:bg-amber-950/20">
+            <label className="flex items-center gap-2 text-xs font-semibold text-amber-800 dark:text-amber-300">
               <input
                 type="checkbox"
                 checked={revealSecretsEnabled}

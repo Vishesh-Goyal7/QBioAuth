@@ -12,21 +12,14 @@ import {
   YAxis,
 } from "recharts";
 import { useProtocolStore } from "../../store/protocolStore";
+import { useThemeStore } from "../../store/themeStore";
 
 const AXIS_COLOR = "#6b7280";
-const GRID_COLOR = "#1f2937";
-const TOOLTIP_STYLE = {
-  backgroundColor: "#111827",
-  border: "1px solid #1f2937",
-  borderRadius: 8,
-  fontSize: 12,
-  color: "#e5e7eb",
-};
 const AXIS_LABEL_STYLE = { fill: AXIS_COLOR, fontSize: 11 };
 
 function ChartCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="rounded-lg border border-panelborder bg-[#0b0f17] p-3">
+    <div className="rounded-lg border border-panelborder bg-appbg p-3">
       <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{title}</div>
       <div className="h-56">{children}</div>
     </div>
@@ -49,6 +42,16 @@ function EmptyChartNote() {
 export default function SessionAnalyticsPanel() {
   const sessionHistory = useProtocolStore((s) => s.sessionHistory);
   const clearSessionHistory = useProtocolStore((s) => s.clearSessionHistory);
+  const theme = useThemeStore((s) => s.theme);
+  const isDark = theme === "dark";
+  const gridColor = isDark ? "#1f2937" : "#e5e7eb";
+  const tooltipStyle = {
+    backgroundColor: isDark ? "#111827" : "#ffffff",
+    border: `1px solid ${isDark ? "#1f2937" : "#e5e7eb"}`,
+    borderRadius: 8,
+    fontSize: 12,
+    color: isDark ? "#e5e7eb" : "#111827",
+  };
 
   const keyLengthByRun = useMemo(
     () =>
@@ -113,7 +116,7 @@ export default function SessionAnalyticsPanel() {
     <div className="rounded-lg border border-panelborder bg-panel p-4">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-gray-100">Session Analytics</h2>
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Session Analytics</h2>
           <p className="text-xs text-gray-500">
             {sessionHistory.length} run{sessionHistory.length === 1 ? "" : "s"} this session ·{" "}
             {completedCount} completed · {failedCount} failed
@@ -122,7 +125,7 @@ export default function SessionAnalyticsPanel() {
         <button
           type="button"
           onClick={clearSessionHistory}
-          className="rounded-md border border-panelborder px-2.5 py-1.5 text-xs text-gray-400 transition hover:border-red-800 hover:text-red-300"
+          className="rounded-md border border-panelborder px-2.5 py-1.5 text-xs text-gray-500 transition hover:border-red-400 hover:text-red-600 dark:text-gray-400 dark:hover:border-red-800 dark:hover:text-red-300"
         >
           Clear history
         </button>
@@ -133,7 +136,7 @@ export default function SessionAnalyticsPanel() {
           {keyLengthByRun.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={keyLengthByRun} margin={{ top: 5, right: 12, bottom: 4, left: 4 }}>
-                <CartesianGrid stroke={GRID_COLOR} strokeDasharray="3 3" />
+                <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
                 <XAxis
                   dataKey="runNumber"
                   stroke={AXIS_COLOR}
@@ -146,7 +149,7 @@ export default function SessionAnalyticsPanel() {
                   width={40}
                   label={{ value: "bits", angle: -90, position: "insideLeft", style: AXIS_LABEL_STYLE }}
                 />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
+                <Tooltip contentStyle={tooltipStyle} />
                 <Line
                   type="monotone"
                   dataKey="keyLengthBits"
@@ -165,7 +168,7 @@ export default function SessionAnalyticsPanel() {
           {keyLengthByEve.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 5, right: 12, bottom: 4, left: 4 }}>
-                <CartesianGrid stroke={GRID_COLOR} strokeDasharray="3 3" />
+                <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
                 <XAxis dataKey="eveLabel" type="category" stroke={AXIS_COLOR} tick={{ fontSize: 11 }} />
                 <YAxis
                   dataKey="keyLengthBits"
@@ -174,7 +177,7 @@ export default function SessionAnalyticsPanel() {
                   width={40}
                   label={{ value: "bits", angle: -90, position: "insideLeft", style: AXIS_LABEL_STYLE }}
                 />
-                <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ strokeDasharray: "3 3" }} />
+                <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }} />
                 <Scatter data={keyLengthByEve} fill="#f59e0b" />
               </ScatterChart>
             </ResponsiveContainer>
@@ -187,7 +190,7 @@ export default function SessionAnalyticsPanel() {
           {qberByEve.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 5, right: 12, bottom: 4, left: 4 }}>
-                <CartesianGrid stroke={GRID_COLOR} strokeDasharray="3 3" />
+                <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
                 <XAxis dataKey="eveLabel" type="category" stroke={AXIS_COLOR} tick={{ fontSize: 11 }} />
                 <YAxis
                   dataKey="qberPercent"
@@ -197,7 +200,7 @@ export default function SessionAnalyticsPanel() {
                   label={{ value: "QBER %", angle: -90, position: "insideLeft", style: AXIS_LABEL_STYLE }}
                 />
                 <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
+                  contentStyle={tooltipStyle}
                   cursor={{ strokeDasharray: "3 3" }}
                   formatter={(value) => `${Number(value).toFixed(2)}%`}
                 />
@@ -213,7 +216,7 @@ export default function SessionAnalyticsPanel() {
           {efficiencyByDistance.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 5, right: 12, bottom: 4, left: 4 }}>
-                <CartesianGrid stroke={GRID_COLOR} strokeDasharray="3 3" />
+                <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
                 <XAxis
                   dataKey="distanceKm"
                   type="number"
@@ -231,7 +234,7 @@ export default function SessionAnalyticsPanel() {
                   label={{ value: "Efficiency %", angle: -90, position: "insideLeft", style: AXIS_LABEL_STYLE }}
                 />
                 <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
+                  contentStyle={tooltipStyle}
                   cursor={{ strokeDasharray: "3 3" }}
                   formatter={(value) => `${Number(value).toFixed(1)}%`}
                 />
@@ -248,7 +251,7 @@ export default function SessionAnalyticsPanel() {
         <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">Run history</div>
         <div className="max-h-72 overflow-auto rounded-lg border border-panelborder">
           <table className="w-full min-w-[720px] border-collapse text-left text-xs">
-            <thead className="sticky top-0 bg-[#0b0f17] text-gray-500">
+            <thead className="sticky top-0 bg-appbg text-gray-500">
               <tr>
                 <th className="px-3 py-2 font-medium">Run #</th>
                 <th className="px-3 py-2 font-medium">Outcome</th>
@@ -265,16 +268,20 @@ export default function SessionAnalyticsPanel() {
               {[...sessionHistory]
                 .sort((a, b) => b.runNumber - a.runNumber)
                 .map((e) => (
-                  <tr key={e.id} className="border-t border-panelborder text-gray-300">
+                  <tr key={e.id} className="border-t border-panelborder text-gray-700 dark:text-gray-300">
                     <td className="px-3 py-1.5">{e.runNumber}</td>
                     <td
                       className={`px-3 py-1.5 font-medium ${
-                        e.outcome === "COMPLETED" ? "text-emerald-400" : "text-red-400"
+                        e.outcome === "COMPLETED"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       {e.outcome === "COMPLETED" ? "Completed" : "Failed"}
                     </td>
-                    <td className={`px-3 py-1.5 ${e.eavesdropperPresent ? "text-rose-400" : "text-gray-500"}`}>
+                    <td
+                      className={`px-3 py-1.5 ${e.eavesdropperPresent ? "text-rose-600 dark:text-rose-400" : "text-gray-500"}`}
+                    >
                       {e.eavesdropperPresent ? "On" : "Off"}
                     </td>
                     <td className="px-3 py-1.5">{e.distanceKm != null ? e.distanceKm.toFixed(1) : "—"}</td>

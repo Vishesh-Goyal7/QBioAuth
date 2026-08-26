@@ -3,10 +3,11 @@ import { useProtocolStore } from "../../store/protocolStore";
 import type { EventStatus, ProtocolEvent } from "../../types/protocol";
 
 const PILL_CLASS: Record<EventStatus, string> = {
-  STARTED: "bg-amber-950 text-amber-300 border border-amber-700",
-  PROGRESS: "bg-amber-950 text-amber-300 border border-amber-700",
-  SUCCESS: "bg-emerald-950 text-emerald-300 border border-emerald-700",
-  FAILURE: "bg-red-950 text-red-300 border border-red-700",
+  STARTED: "bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-700",
+  PROGRESS: "bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-700",
+  SUCCESS:
+    "bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-700",
+  FAILURE: "bg-red-100 text-red-800 border border-red-300 dark:bg-red-950 dark:text-red-300 dark:border-red-700",
 };
 
 // v3: attempt_number is only known retrospectively, on the single
@@ -55,11 +56,11 @@ export default function EventLog() {
           {events.map((event) => (
             <li
               key={event.event_id}
-              className="flex items-start justify-between gap-3 rounded px-2 py-1.5 text-sm hover:bg-white/5"
+              className="flex items-start justify-between gap-3 rounded px-2 py-1.5 text-sm hover:bg-black/5 dark:hover:bg-white/5"
             >
               <div className="min-w-0">
                 <span className="mr-2 font-mono text-[10px] text-gray-600">{event.phase}</span>
-                <span className="text-gray-200">{formatEventMessage(event)}</span>
+                <span className="text-gray-800 dark:text-gray-200">{formatEventMessage(event)}</span>
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${PILL_CLASS[event.status]}`}>

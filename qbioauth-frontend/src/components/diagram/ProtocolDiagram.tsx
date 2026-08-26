@@ -6,6 +6,7 @@ import ServerNode from "./ServerNode";
 import UserNode from "./UserNode";
 import ProtocolEdge, { type ProtocolEdgeData } from "./ProtocolEdge";
 import { useProtocolStore } from "../../store/protocolStore";
+import { useThemeStore } from "../../store/themeStore";
 import { computeEdgeVisualState } from "../../lib/edgeVisualState";
 import { TERMINAL_SERVER_PHASES, TERMINAL_USER_PHASES } from "../../types/protocol";
 
@@ -29,6 +30,7 @@ export default function ProtocolDiagram() {
   const phaseState = useProtocolStore((s) => s.phaseState);
   const mode = useProtocolStore((s) => s.mode);
   const lastFailure = useProtocolStore((s) => s.lastFailure);
+  const theme = useThemeStore((s) => s.theme);
 
   const edges: Edge[] = useMemo(() => {
     const tsVisual = computeEdgeVisualState(phaseState, TERMINAL_SERVER_PHASES, "AES_CHANNEL", lastFailure);
@@ -64,7 +66,7 @@ export default function ProtocolDiagram() {
   }, [phaseState, mode, lastFailure]);
 
   return (
-    <div className="h-full w-full rounded-lg border border-panelborder bg-[#0d1320]">
+    <div className="h-full w-full rounded-lg border border-panelborder bg-diagrambg">
       <ReactFlow
         nodes={NODES}
         edges={edges}
@@ -81,7 +83,7 @@ export default function ProtocolDiagram() {
         fitViewOptions={{ padding: 0.3 }}
         proOptions={{ hideAttribution: true }}
       >
-        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#1f2937" />
+        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color={theme === "dark" ? "#1f2937" : "#d1d5db"} />
       </ReactFlow>
     </div>
   );

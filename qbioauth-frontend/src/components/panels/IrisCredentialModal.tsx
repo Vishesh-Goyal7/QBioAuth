@@ -28,18 +28,18 @@ export default function IrisCredentialModal() {
       <div className="w-full max-w-lg rounded-xl border border-emerald-800 bg-panel p-6 shadow-2xl">
         <div className="mb-3 flex items-center gap-2">
           <span className="text-2xl">🔑</span>
-          <h2 className="text-lg font-semibold text-gray-100">Your iris credential</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Your iris credential</h2>
         </div>
 
-        <p className="mb-3 rounded-md border border-amber-800 bg-amber-950/40 px-3 py-2 text-sm text-amber-300">
+        <p className="mb-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
           {credential.warning}
         </p>
 
         <label className="mb-1 block text-xs text-gray-500">
           Iris code {credential.email && <span className="text-gray-600">— {credential.email}</span>}
         </label>
-        <div className="mb-2 max-h-32 overflow-y-auto rounded-md border border-panelborder bg-[#0b0f17] p-3">
-          <p className="break-all font-mono text-xs text-emerald-300">{credential.iris_code}</p>
+        <div className="mb-2 max-h-32 overflow-y-auto rounded-md border border-panelborder bg-appbg p-3">
+          <p className="break-all font-mono text-xs text-emerald-700 dark:text-emerald-300">{credential.iris_code}</p>
         </div>
 
         <p className="mb-4 text-[11px] text-gray-600">

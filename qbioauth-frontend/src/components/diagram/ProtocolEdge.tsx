@@ -24,11 +24,13 @@ const WIDTH_BY_KIND: Record<EdgeVisualState["kind"], number> = {
 };
 
 const LABEL_CLASS_BY_KIND: Record<EdgeVisualState["kind"], string> = {
-  IDLE: "bg-gray-800 text-gray-400",
-  ACTIVE: "bg-amber-950 text-amber-300 border border-amber-700",
-  INTERMEDIATE_SUCCESS: "bg-blue-950 text-blue-300 border border-blue-700",
-  FINAL_SUCCESS: "bg-emerald-950 text-emerald-300 border border-emerald-700",
-  FAILURE: "bg-red-950 text-red-300 border border-red-700",
+  IDLE: "bg-gray-200 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  ACTIVE: "bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-700",
+  INTERMEDIATE_SUCCESS:
+    "bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-700",
+  FINAL_SUCCESS:
+    "bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-700",
+  FAILURE: "bg-red-100 text-red-800 border border-red-300 dark:bg-red-950 dark:text-red-300 dark:border-red-700",
   ATTACK_DETECTED: "bg-rose-600 text-white border-2 border-rose-300 animate-pulse font-bold",
 };
 

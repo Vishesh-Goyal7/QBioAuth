@@ -58,7 +58,7 @@ export default function SystemInfoPanel() {
         {rows.map(([label, value]) => (
           <div key={label} className="flex justify-between gap-3">
             <dt className="text-gray-500">{label}</dt>
-            <dd className="truncate text-right font-mono text-gray-300">{value}</dd>
+            <dd className="truncate text-right font-mono text-gray-700 dark:text-gray-300">{value}</dd>
           </div>
         ))}
       </dl>
