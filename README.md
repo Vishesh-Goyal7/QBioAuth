@@ -226,17 +226,9 @@ Stay curious.
 
 ---
 
-## 🙋‍♂️ Author & Co-Authors
-
-> *PLACEHOLDER TEXT*
+## 🙋‍♂️ Author
 
 **Vishesh Goyal**
-[Mail](mailto:visheshvishu1@outlook.com) | [Portfolio](https://visheshverse.com) | [GitHub](https://github.com/Vishesh-Goyal7) | [LinkedIn](https://www.linkedin.com/in/vishesh-goyal-2k5)
-
-**Co-Author** *(placeholder)*
-[Mail](mailto:visheshvishu1@outlook.com) | [Portfolio](https://visheshverse.com) | [GitHub](https://github.com/Vishesh-Goyal7) | [LinkedIn](https://www.linkedin.com/in/vishesh-goyal-2k5)
-
-**Co-Author** *(placeholder)*
 [Mail](mailto:visheshvishu1@outlook.com) | [Portfolio](https://visheshverse.com) | [GitHub](https://github.com/Vishesh-Goyal7) | [LinkedIn](https://www.linkedin.com/in/vishesh-goyal-2k5)
 
 ---
