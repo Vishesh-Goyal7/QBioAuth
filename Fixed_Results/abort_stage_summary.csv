@@ -1,0 +1,15 @@
+axis,status,last_stage,count
+baseline,SUCCESS,privacy_amplification,100
+basis,ABORT,acquisition,200
+basis,SUCCESS,privacy_amplification,500
+distance,ABORT,cascade,1
+distance,ABORT,privacy_amplification,7
+distance,ABORT_PHYSICAL_ACQUISITION,setup,100
+distance,SUCCESS,privacy_amplification,592
+eve,ABORT,parameter_estimation,100
+interaction,ABORT,parameter_estimation,601
+interaction,ABORT,privacy_amplification,299
+interaction,SUCCESS,privacy_amplification,300
+qber,ABORT,parameter_estimation,258
+qber,ABORT,privacy_amplification,341
+qber,SUCCESS,privacy_amplification,301
